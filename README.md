@@ -1,36 +1,18 @@
-# SOMTimeS: Self-Organizing Maps for TIME Series
-
-
-
-## Other relevant papers
-If you use this code please cite SOMTimeS paper.
-
-@misc{javed2021somtimes,
-      title={SOMTimeS: Self Organizing Maps for Time Series Clustering and its Application to Serious Illness Conversations}, 
-      author={Ali Javed and Donna M. Rizzo and Byung Suk Lee and Robert Gramling},
-      year={2021},
-      eprint={2108.11523},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
-}
-
-
-
-
+# Machine learning infrastructure for My Heart Counts Studies
 
 ## Installation
 
-somtime is available on PyPI 
+MyHeartCounts will be available on PyPI
 
 ```console
-$ pip install somtimes
+$ pip install 
 ```
 
 ### Install from source
 
 
 ```console
-$ python setup.py install
+$ python setup.py
 ```
 
 ## Usage
@@ -38,6 +20,6 @@ $ python setup.py install
 
 ```
 see demo.py for example and explaination of usage
-The SOM can cluster time series data.
+Object allows access, cleaning, parsing, and modeling the My Heart Counts data for analysis and machine learning. 
 
 ```
