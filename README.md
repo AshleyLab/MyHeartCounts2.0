@@ -19,7 +19,7 @@ $ python setup.py
 
 
 ```
-see demo.py for example and explaination of usage
+see demo.py for example and explaination of usage -- work in progress
 Object allows access, cleaning, parsing, and modeling the My Heart Counts data for analysis and machine learning. 
 
 ```
