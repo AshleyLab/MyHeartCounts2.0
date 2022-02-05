@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import setuptools
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 
 CLASSIFIERS = [
@@ -26,7 +26,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     zip_safe=True,
     license="",
-    download_url = "https://github.com/AshleyLab/MyHeartCounts2.0",
+    download_url = "https://github.com/AshleyLab/MyHeartCounts2.0/archive/refs/tags/v1.0.1.tar.gz",
     url="https://github.com/AshleyLab/MyHeartCounts2.0",
     install_requires=['numpy','synapseclient','datetime']
 )
