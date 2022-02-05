@@ -28,5 +28,5 @@ setuptools.setup(
     license="",
     download_url = "https://github.com/AshleyLab/MyHeartCounts2.0",
     url="https://github.com/AshleyLab/MyHeartCounts2.0",
-    install_requires=['numpy']
+    install_requires=['numpy','synapseclient','datetime']
 )
