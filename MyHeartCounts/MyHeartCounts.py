@@ -80,9 +80,9 @@ class MyHeartCounts:
         #############################################################################
 
 
-    def retrieveAllUsers(self):
+    def start(self):
         #############################
-        # Description: Function retrieves users from demographics tables V1 and V2 from synapse
+        # Description: Function retrieves users from demographics tables V1 and V2 from synapse. Start seems like a user friendly way to say it.
 
         # Inputs:
         # None
