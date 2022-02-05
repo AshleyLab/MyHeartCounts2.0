@@ -30,29 +30,22 @@ synapsePassword=lines[1].strip()
 f.close()
 
 #Synapse Cache path. Set cache path or leave empty for default value
-synapseCachePath = '/Users/ajaved/Three/MHC_DataBase/code/synapseCache'
-
-#Load a study. Name the study (usually table name), and study table to retrieve data from synapse.
-studyName = 'HealthKitWorkoutCollector'
-studyTable = 'syn3560095'
+#Normally we set all the parameters of the script here, but for this presentation tutorial the values are at the location they are used. 
 #all parameters set
 ##############################
 
 
 
 #Initilize a MyHeartCounts object
-MHC = MyHeartCounts(synapseUsername, synapsePassword, synapseCachePath = synapseCachePath )
-#retrieve users from demographics tables of synapse
-MHC.retrieveAllUsers()
-MHC.loadStudy(studyName,studyTable)
+MHC = MyHeartCounts(synapseUsername, synapsePassword, synapseCachePath = '/Users/ajaved/Three/MHC_DataBase/code/synapseCache')
+#retrieve users from demographics tables of synapse#this line is not needed.
+MHC.start()
+#load a study
+MHC.loadStudy(studyName = 'HealthKitWorkoutCollector',studyTable = 'syn3560095')
 
-#get list of users
-#users = MHC.get_users()
 
-#get studies
-#studies = MHC.get_studies()
 
 #calculate time
 end= time.time()
 difference = int(end - start)
-print('Data retrival, loading, cleaning and parsing complete in '+str(difference)+' seconds.')
+print('Complete. '+str(difference))
