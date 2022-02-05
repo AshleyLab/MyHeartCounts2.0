@@ -13,7 +13,7 @@ from MyHeartCounts import MyHeartCounts
 ##############################
 
 #Initilize a MyHeartCounts object
-MHC = MyHeartCounts(user_password_file_path = '../../synapseAccess.txt', synapseCachePath = '/Users/ajaved/Three/MHC_DataBase/code/synapseCache')
+MHC = MyHeartCounts(user_password_file_path = '../../synapseAccess.txt')
 
 #Rev up your engine!!
 MHC.start()

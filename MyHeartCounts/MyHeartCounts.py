@@ -5,7 +5,7 @@ import synapseclient
 from datetime import datetime
 
 class MyHeartCounts:
-    def __init__(self, user_password_file_path,synapseCachePath):
+    def __init__(self, user_password_file_path,synapseCachePath = '/Users/ajaved/Three/MHC_DataBase/code/synapseCache'):
         ##############################
         # author: Ali Javed
         # October: 3 February 2022
