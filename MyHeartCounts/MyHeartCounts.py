@@ -217,6 +217,8 @@ class MyHeartCounts:
 
         # convert the response to a dataframe and load in our users object
         response_df = response.asDataFrame()
+        
+        #retrieve file paths here.
 
         # logout of synapse once done.
         studyObj = Study(studyName, studyTable)
