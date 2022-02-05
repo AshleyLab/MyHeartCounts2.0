@@ -26,7 +26,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     zip_safe=True,
     license="",
-    download_url = "https://github.com/AshleyLab/MyHeartCounts2.0/archive/refs/tags/v1.0.1.tar.gz",
+    download_url = "https://github.com/AshleyLab/MyHeartCounts2.0/archive/refs/tags/v0.0.2.tar.gz",
     url="https://github.com/AshleyLab/MyHeartCounts2.0",
     install_requires=['numpy','synapseclient','datetime']
 )
