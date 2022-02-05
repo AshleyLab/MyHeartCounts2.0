@@ -4,6 +4,9 @@
 
 MyHeartCounts will be available on PyPI
 
+![plot](./images/MyHeartCounts_ML_Pipeline_architecture.png)
+
+
 ```console
 $ pip install 
 ```
