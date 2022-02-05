@@ -5,7 +5,7 @@ import synapseclient
 from datetime import datetime
 
 class MyHeartCounts:
-    def __init__(self, synapseUserName, synapsePassword,synapseCachePath = ''):
+    def __init__(self, user_password_file_path,synapseCachePath):
         ##############################
         # author: Ali Javed
         # October: 3 February 2022
@@ -14,6 +14,7 @@ class MyHeartCounts:
         # Description: Class is used to access My Heart Counts data on Synapse and user interaction data on Amazon Web Services.
         
         # Inputs
+        # currently not available 
         # SynapseUser: Username of Synapse Account
         # SynapsePassword: Password for Synapse Account
         
@@ -36,11 +37,24 @@ class MyHeartCounts:
 
         #Study contains details of a particular study. Such as User, 6 min-walk test results, phone model used etc.
         self.Studies = []
+        
+        
+        ##############################
+        #set parameters
+        #Path to Username Password file. Replace the path with path to the file that has your synapse credentials. Put the username in first line and password in second.
+        f=open(user_password_file_path, "r")
+        lines=f.readlines()
+        self.synapseUserName=lines[0].strip()
+        self.synapsePassword=lines[1].strip()
+        f.close()
 
 
+
+        #If ever we have a GUI
+        #self.synapseUserName = synapseUserName
+        #self.synapsePassword = synapsePassword
+        
         self.synapseCachePath = synapseCachePath
-        self.synapseUserName = synapseUserName
-        self.synapsePassword = synapsePassword
         self.synapseConection = None
 
     def refresh_UniqueUsers(self):
@@ -92,7 +106,7 @@ class MyHeartCounts:
 
         #connect to synapse
         self.synapseConnection = self.connectToSynapse()
-        print('Retrieving user data. This may take some time if cache is empty.')
+        #print('Retrieving user data. This may take some time if cache is empty.')
         
         #Data retrieval, parsing and clearning
         #There are two tables that have base data related to users, and not to MHC studies. We can add more tables here to be read.
@@ -207,7 +221,7 @@ class MyHeartCounts:
 
         # connect to synapse
         self.synapseConnection = self.connectToSynapse()
-        print('Retrieving study data. This may take some time if cache is empty.')
+        #print('Retrieving study data. This may take some time if cache is empty.')
 
         #get all data from the study table
         query = "Select * from " + studyTable + ' ORDER BY createdOn DESC'
@@ -243,7 +257,7 @@ class MyHeartCounts:
         # Data loading and class initilization complete.
         
         
-        return True
+        #return True
 
 
     def get_studies(self):
