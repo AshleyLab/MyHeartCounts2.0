@@ -1,2 +1,1 @@
-from MyHearCounts.MyHeartCounts import MyHeartCounts
-
+from MyHeartCounts import MyHeartCounts

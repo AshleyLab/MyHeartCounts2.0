@@ -1,12 +1,12 @@
 Metadata-Version: 2.1
 Name: MyHeartCounts
-Version: 1.0.0
+Version: 1.0.1
 Summary: Python wrapper to load and analyze studies on My Heart Counts App
 Home-page: https://github.com/AshleyLab/MyHeartCounts2.0
 Author: A. Javed
 Author-email: alijaved@live.com
 License: UNKNOWN
-Download-URL: https://github.com/AshleyLab/MyHeartCounts2.0
+Download-URL: https://github.com/AshleyLab/MyHeartCounts2.0/archive/refs/tags/v1.0.1.tar.gz
 Platform: UNKNOWN
 License-File: LICENSE.md
 
