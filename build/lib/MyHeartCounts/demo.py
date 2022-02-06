@@ -9,7 +9,7 @@
 
 
 #import libraries
-from myHeartCounts import MyHeartCounts
+from myHeartCounts.MyHeartCounts import MyHeartCounts
 ##############################
 
 #Initilize a MyHeartCounts object

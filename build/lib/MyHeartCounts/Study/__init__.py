@@ -1,1 +1,1 @@
-from study import Study
+from .Study import Study
