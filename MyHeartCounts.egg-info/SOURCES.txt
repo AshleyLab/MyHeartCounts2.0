@@ -4,6 +4,7 @@ setup.py
 MyHeartCounts/MyHeartCounts.py
 MyHeartCounts/__init__.py
 MyHeartCounts/demo.py
+MyHeartCounts/myHeartCounts.py
 MyHeartCounts.egg-info/PKG-INFO
 MyHeartCounts.egg-info/SOURCES.txt
 MyHeartCounts.egg-info/dependency_links.txt
@@ -14,3 +15,7 @@ MyHeartCounts/Study/Study.py
 MyHeartCounts/Study/__init__.py
 MyHeartCounts/User/User.py
 MyHeartCounts/User/__init__.py
+MyHeartCounts/study/Study.py
+MyHeartCounts/study/__init__.py
+MyHeartCounts/user/User.py
+MyHeartCounts/user/__init__.py

@@ -23,7 +23,7 @@ setuptools.setup(
     long_description = "",
     author="A. Javed",
     author_email="alijaved@live.com",
-    packages=['MyHeartCounts', 'MyHeartCounts.User','MyHeartCounts.Study'],
+    packages=setuptools.find_packages(),
     zip_safe=True,
     license="",
     download_url = "https://github.com/AshleyLab/MyHeartCounts2.0/archive/refs/tags/v0.0.8.tar.gz",
