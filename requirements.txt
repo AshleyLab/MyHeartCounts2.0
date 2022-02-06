@@ -2,6 +2,8 @@
 Numpy
 Python >3.6
 Synapseclient
+Datetime
+pandas
 
 
 Work in Ashley Lab. Working with mind set data how mindset effects behavior. How exercise effects life style. How to improve exercise times for people. 
