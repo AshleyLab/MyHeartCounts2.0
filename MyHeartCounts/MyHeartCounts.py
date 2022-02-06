@@ -1,6 +1,6 @@
 #python libraries needed in code
-from User.User import User
-from Study.Study import Study
+from user.User import User
+from study.Study import Study
 import synapseclient
 from datetime import datetime
 

@@ -9,7 +9,7 @@
 
 
 #import libraries
-from MyHeartCounts import MyHeartCounts
+from myHeartCounts import MyHeartCounts
 ##############################
 
 #Initilize a MyHeartCounts object

@@ -11,4 +11,6 @@ MyHeartCounts.egg-info/requires.txt
 MyHeartCounts.egg-info/top_level.txt
 MyHeartCounts.egg-info/zip-safe
 MyHeartCounts/Study/Study.py
+MyHeartCounts/Study/__init__.py
 MyHeartCounts/User/User.py
+MyHeartCounts/User/__init__.py
