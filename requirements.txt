@@ -4,3 +4,5 @@ Python >3.6
 Synapseclient
 Datetime
 Pandas
+Csv
+Json

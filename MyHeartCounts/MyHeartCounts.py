@@ -1,6 +1,8 @@
 #python libraries needed in code
-from .user.User import User
-from .study.Study import Study
+#from .user.User import User
+#from .study.Study import Study
+from user.User import User
+from study.Study import Study
 import synapseclient
 from datetime import datetime
 
@@ -94,7 +96,7 @@ class MyHeartCounts:
         #############################################################################
 
 
-    def start(self):
+    def start(self,silent = True):
         #############################
         # Description: Function retrieves users from demographics tables V1 and V2 from synapse. Start seems like a user friendly way to say it.
 
@@ -207,41 +209,43 @@ class MyHeartCounts:
         return self.Users
 
         
-    def loadStudy(self,studyName, studyTable, studyObservationParseFunction = None ):
+    def loadStudy(self,studyName, studyTable, healthCodes = [],studyObservationParseFunction = None, silent = True,limit = 0):
         #############################
-        # Description: Class loads study, if parser is available, parses data, otherwise users can pass a parsing function for their study, or user existing parsers for the particular study
+        # Description: Class loads study. Because of large amounts of data in some tables we do not download all the blobs. Just the data. Blobs to be downloaded by users by reducing selection criteria.
         # contributed by other team members.
 
         # Inputs:
         # None
         # Output:
         # self.Users: List of user objects that contain all the loaded users.
+        # silent: Do not show sypanse status messages.
 
         ########################################
 
         # connect to synapse
-        self.synapseConnection = self.connectToSynapse()
-        #print('Retrieving study data. This may take some time if cache is empty.')
+        self.synapseConnection = self.connectToSynapse(silent = silent)
 
-        #get all data from the study table
-        query = "Select * from " + studyTable + ' ORDER BY createdOn DESC'
+        #start building query
+        query = "Select * from " + studyTable
+
+        if len(healthCodes)> 0:
+            # format healthCodes for SQL
+            healthCodes = "(%s)" % str(healthCodes).strip('[]')
+            query = query +" WHERE healthCode in "+str(healthCodes)
+        #order by createdOn desc, faster to search
+        query = query + " ORDER BY createdOn DESC"
+        #if limiting the results
+        if limit >0:
+            query = "Select * from " + studyTable + " ORDER BY createdOn DESC LIMIT "+str(limit)
+
         response = self.synapseConnection.tableQuery(query)
-        
-        
-
-        # convert the response to a dataframe and load in our users object
+        #convert the response to a dataframe and load in our users object
         response_df = response.asDataFrame()
-        
-        #retrieve file paths here.
-
-        # logout of synapse once done.
-        studyObj = Study(studyName, studyTable)
-
-        #iterate of data to parse, clean and store
-        for index, observation in response_df.iterrows():
-            observation = studyObj.parse_observation(observation)
-            studyObj.add_observation(observation)
-
+        #create a study object
+        studyObj = Study(studyName, studyTable,synapseCachePath = self.synapseCachePath, synapseUserName= self.synapseUserName, synapsePassword=self.synapsePassword)
+        #load observations in the study object observatiosn list
+        for index, row in response_df.iterrows():
+            studyObj.add_observation(row)
 
         #update set of users enrolled in study.
         studyObj.refresh_studyUsers()

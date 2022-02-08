@@ -1,7 +1,11 @@
 #python libraries needed in code
+import csv
+import synapseclient
+import string
+
 
 class Study:
-    def __init__(self, studyName,studyTable):
+    def __init__(self, studyName,studyTable,synapseCachePath= '',synapseUserName = '', synapsePassword=''):
         ##############################
         # author: Ali Javed
         # October: 3 February 2022
@@ -12,6 +16,10 @@ class Study:
         # Inputs
         #StudyName: Study name for readability
         #TableName: Table name in synapse.
+        #Below inputs should be inhereted from MyHeartCounts object
+        #synapseCachePath: It is copied from MHC class
+        #synapseUserName: Copied from MHC class
+        #synapsePassword: Copied from MHC class
         #Output
         #Study Object
     
@@ -29,9 +37,38 @@ class Study:
         self.studyUsers = set()
 
 
-    def parse_observation(self, observation):
+        #This is not the best, we should only connect to Synapse in MHC class. One place.
+        self.synapseCachePath = synapseCachePath
+        self.synapseConection = None
+        self.synapseUserName = synapseUserName
+        self.synapsePassword = synapsePassword
+
+    def connectToSynapse(self, multi_threaded=True, silent=True):
         #############################
-        # Description: Parse a single observation in a study. This is a dataframe row. This function, is a wrapper that calls appropriate parsing function.
+        # Description: Function connects to synapse, incase of longer analysis there may be a time out
+
+        # Inputs:
+        # multi_threaded: Synapse connection parameter
+        # Output:
+        # None
+        #############################################################################
+        # Synapse Connection
+        # Read https://python-docs.synapse.org/build/html/index.html for details
+        if self.synapseCachePath == '':
+            synapseConnection = synapseclient.Synapse(silent=silent)
+        else:
+            synapseConnection = synapseclient.Synapse(cache_root_dir=self.synapseCachePath, silent=silent)
+        synapseConnection.multi_threaded = multi_threaded
+
+        # return the status of connection
+        synapseConnection.login(self.synapseUserName, self.synapsePassword)
+        return synapseConnection
+        #############################################################################
+
+
+    def retrieve_blobs(self, healthCodes,blob_names,silent):
+        #############################
+        # Description: Retrieve parse and clean blobs for a study.
 
         # Inputs:
         # observation: Row of dataframe in study table
@@ -39,9 +76,44 @@ class Study:
         # observation: Parsed/cleaned row of dataframe provided as input
 
         ########################################
-        #add do before study name to match the parsing function name. We do not want to expose all the functions to external use. Chosing studyName instead of table because
-        #two studies/tables can have same parsing, such a V1 and V2
-        parser_function_name = f"do_{self.studyName}"
+
+        # connect to synapse
+        self.synapseConnection = self.connectToSynapse(silent=silent)
+
+        # replace square brackets with parenthesis for SQL formatting
+        healthCodes = "(%s)" % str(healthCodes).strip('[]')
+        #get all data from the study table for healthCodes needed. Can further narrow down with dates here if data is unmanagable.
+        query = "SELECT * FROM " + self.studyTable +" WHERE healthCode in "+str(healthCodes) + " ORDER BY createdOn DESC"
+
+
+
+
+        response = self.synapseConnection.tableQuery(query)
+
+
+        #download all the blobs needed files study.
+        files = self.synapseConnection.downloadTableColumns(response, blob_names)
+
+        #create a mapping of file handle id and path to replace handle id with path for easy parsing
+        fileHandleId_to_Path = {}
+        #add data.csv files or their path to observations
+        for file_handle_id, path in files.items():
+            #file handle id is the kay and its path is the value
+            fileHandleId_to_Path[int(file_handle_id)] = path
+
+
+        #For all observations loaded update with file paths of blobs we have
+        for i in range(0,len(self.observations)):
+            #for all the downloaded columns
+            for blob_name in blob_names:
+                #check if the blob was downloaded:
+                if self.observations[i][blob_name] in fileHandleId_to_Path:
+                    # replace file handle id with file path from cache
+                    self.observations[i][blob_name] = fileHandleId_to_Path[self.observations[i][blob_name]]
+
+
+        #decide which parser is to be used for this study
+        parser_function_name = f"retrieve_{self.studyName}"
 
 
         #some libraries used in below line
@@ -49,56 +121,17 @@ class Study:
         #In general, a callable is something that can be called. This built-in method in Python checks and returns True if the object passed appears to be callable, but may not be, otherwise False.
         #The getattr() method returns the value of the named attribute of an object. If not found, it returns the default value provided to the function.
 
-        #check if we have a function for parsing, if so parse and return observation
+        #check if we have a function for parsing, if so parse the observations in that study which have a file path
         if hasattr(self, parser_function_name) and callable(func := getattr(self, parser_function_name)):
-            observation = func(observation)
-            return observation
+            status = func(blob_names)
+            return status
 
-        #if there is no parser, just return observation as is.
+        #if there is no parser.
         else:
-            return observation
-
-
-
-
-
-
-    def do_HealthKitWorkoutCollector(self,observation):
-        #############################
-        # Description: Row parsing for the HealthKitWorkoutCollector table
-        # contributed by other team members.
-
-        # Inputs:
-        # row: row object to be parsed. This is a row from the dataframe loaded from synapse.
-        # Output:
-        # row
-
-        ########################################
-
-        #just return what is recieved.
-        return observation
-
+            return False
 
     def add_observation(self,observation):
         self.observations.append(observation)
-
-        return True
-
-    def parse_all_observations(self):
-        #############################
-        # Description: Function parses all data stored in observations if parser is available
-
-
-        # Inputs:
-        # None. Function uses self.observations
-        # Output:
-        # None. Function updates self.observations
-
-        ########################################
-
-        #loop through all observations in self.observations and update them to parsed version if parser is available for current studyName.
-        for i in range(0,len(self.observations)):
-            self.observations[i]= self.parse_observation(self.observations[i])
 
         return True
 
@@ -119,6 +152,71 @@ class Study:
             self.studyUsers.add(observation['healthCode'])
 
 
+        return True
+
+
+    def retrieve_all_observations(self,blob_names,silent = True):
+        #############################
+        # Description: Retrieve all blobs
+
+
+        # Inputs:
+        # None. Function uses self.observations
+        # Output:
+        # None. Function updates self.observations
+
+        ########################################
+        #which healthCodes:
+        #loop through all observations in self.observations and update them to parsed version if parser is available for current studyName.
+        for i in range(0,len(self.observations)):
+            healthCodes.add(observations[i]['healthCode'])
+
+        #retrieve all the blobs
+        status = self.retrieve_blobs(list(healthCodes),blob_names,silent)
+
+        return status
+
+
+    ########################################################
+    ############## Write study/Table parsers here the function name format is parse_<tablename/study name>
+
+
+
+
+    def retrieve_HealthKitDataCollector(self, blob_names):
+        #############################
+        # Description: Parser for health kit data collector for available blobs
+
+        # Inputs:
+        # observation: Row of dataframe in study table
+        # Output:
+        # observation: Parsed/cleaned row of dataframe provided as input
+
+        #######################################
+
+        for i in range(0,len(self.observations)):
+            for blob_name in blob_names:
+                #if file path is not present for blob, this blob was not downloaded and not needed
+                if str(self.observations[i][blob_name]).isnumeric():
+                    continue
+                else:
+                    #open the blob
+                    fopen = open(self.observations[i][blob_name], encoding='utf-8-sig')
+                    csvr = csv.DictReader(fopen)
+                    #blob is a list of different measurements in the data.csv
+                    blob_list = []
+
+                    try:
+                        for row in csvr:
+                            #create a list of rows
+                            blob_list.append(row)
+                    except:
+                        pass
+
+                    #add read csv here
+                    self.observations[blob_name+str('_data')] = blob
+
+        #parsing complete
         return True
 
 
