@@ -28,11 +28,11 @@ MHC.loadStudy(studyName = 'AB_TestResults',studyTable = 'syn7188351')
 
 select_healthCodes = sorted(MHC.Studies[0].studyUsers)
 select_healthCodes = list(select_healthCodes)[1:5]
-MHC.loadStudy(studyName = 'HealthKitDataCollector',studyTable = 'syn3560085', healthCodes = [], silent = True, limit = 100000)
+MHC.loadStudy(studyName = 'HealthKitDataCollector',studyTable = 'syn3560085', healthCodes = [], silent = True,limit = 10)
 
 
-print('retrieving blobs')
-MHC.Studies[1].retrieve_blobs(blob_names = ['data.csv'],healthCodes = select_healthCodes, silent=False)
+#print('retrieving blobs')
+MHC.Studies[1].retrieve_blobs(blob_names = ['data.csv'],healthCodes = [], silent=False)
 
 
 

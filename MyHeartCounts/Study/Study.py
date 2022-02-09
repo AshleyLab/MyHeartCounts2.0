@@ -97,6 +97,14 @@ class Study:
         #download all the blobs needed files study.
         files = self.synapseConnection.downloadTableColumns(response, blob_names)
 
+        # logout of synapse
+        status = self.synapseConnection.logout()
+        if status != None:
+            print('Logout not sucessfull')
+        # Data loading and class initilization complete.
+    
+
+        '''
         #create a mapping of file handle id and path to replace handle id with path for easy parsing
         fileHandleId_to_Path = {}
         #add data.csv files or their path to observations
@@ -132,6 +140,9 @@ class Study:
         #if there is no parser.
         else:
             return False
+            
+        '''
+
 
     def add_observation(self,observation):
         self.observations.append(observation)
