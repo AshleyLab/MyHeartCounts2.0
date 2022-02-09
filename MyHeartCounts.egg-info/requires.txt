@@ -2,3 +2,5 @@ numpy
 synapseclient
 datetime
 pandas
+csv
+json
