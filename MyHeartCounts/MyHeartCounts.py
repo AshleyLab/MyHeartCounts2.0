@@ -236,7 +236,7 @@ class MyHeartCounts:
         query = query + " ORDER BY createdOn DESC"
         #if limiting the results
         if limit >0:
-            query = "Select * from " + studyTable + " ORDER BY createdOn DESC LIMIT "+str(limit)
+            query = query + " LIMIT "+str(limit)
 
         response = self.synapseConnection.tableQuery(query)
         #convert the response to a dataframe and load in our users object

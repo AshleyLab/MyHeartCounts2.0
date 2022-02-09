@@ -20,27 +20,20 @@ MHC = MyHeartCounts(user_password_file_path = '../../synapseAccess.txt',synapseC
 #Rev up your engine!!
 MHC.start()
 #load a study
-#MHC.loadStudy(studyName = 'mindset_illness',studyTable = ' syn18143712', silent = False)
-#MHC.loadStudy(studyName = 'mindset_adequacy',studyTable = ' syn18143711', silent = False)
-#MHC.loadStudy(studyName = 'mindset_exercise',studyTable = ' syn18143709', silent = False)
-#MHC.loadStudy(studyName = 'AB_TestResults',studyTable = 'syn7188351', silent = False)
-select_healthCodes = MHC.UniqueUsers
-select_healtHCodes = list(select_healthCodes)[1:5]
+#MHC.loadStudy(studyName = 'mindset_illness',studyTable = ' syn18143712')
+#MHC.loadStudy(studyName = 'mindset_adequacy',studyTable = ' syn18143711')
+#MHC.loadStudy(studyName = 'mindset_exercise',studyTable = ' syn18143709')
+MHC.loadStudy(studyName = 'AB_TestResults',studyTable = 'syn7188351')
+#only download data for users we have in coacing study
+
+select_healthCodes = sorted(MHC.Studies[0].studyUsers)
+select_healthCodes = list(select_healthCodes)[1:5]
 MHC.loadStudy(studyName = 'HealthKitDataCollector',studyTable = 'syn3560085', healthCodes = select_healthCodes, silent = True, limit = 100000)
 
 
 print('retrieving blobs')
-MHC.Studies[0].retrieve_blobs(select_healtHCodes,blob_names = ['data.csv'],silent=False)
+MHC.Studies[1].retrieve_blobs(select_healthCodes,blob_names = ['data.csv'],silent=False)
 
-
-
-
-#get daily step counts
-#Stdy = MHC.stuides[0]
-#user_to_dailyStepCounts = defaultdict(lambda: datatime)
-#for user in MHC.Users:
-    #for row in Stdy.observations:
-        #if row['healthCode'] = user.healthCode:
 
 
 print('complete')

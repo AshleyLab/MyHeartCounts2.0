@@ -89,7 +89,7 @@ class Study:
 
 
         response = self.synapseConnection.tableQuery(query)
-
+        response_df = response.asDataFrame()
 
         #download all the blobs needed files study.
         files = self.synapseConnection.downloadTableColumns(response, blob_names)
@@ -214,7 +214,7 @@ class Study:
                         pass
 
                     #add read csv here
-                    self.observations[blob_name+str('_data')] = blob
+                    self.observations[i][blob_name+str('_data')] = blob_list
 
         #parsing complete
         return True
