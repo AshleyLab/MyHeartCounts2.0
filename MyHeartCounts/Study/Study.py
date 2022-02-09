@@ -133,9 +133,11 @@ class Study:
         #The getattr() method returns the value of the named attribute of an object. If not found, it returns the default value provided to the function.
 
         #check if we have a function for parsing, if so parse the observations in that study which have a file path
-        if hasattr(self, parser_function_name) and callable(func := getattr(self, parser_function_name)):
-            status = func(blob_names)
-            return status
+        if hasattr(self, parser_function_name):
+            func = getattr(self, parser_function_name)
+            if callable(func):
+                status = func(blob_names)
+                return status
 
         #if there is no parser.
         else:
