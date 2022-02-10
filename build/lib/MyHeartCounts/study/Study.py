@@ -84,9 +84,9 @@ class Study:
             # replace square brackets with parenthesis for SQL formatting
             healthCodes = "(%s)" % str(healthCodes).strip('[]')
             #get all data from the study table for healthCodes needed. Can further narrow down with dates here if data is unmanagable.
-            query = "SELECT * FROM " + self.studyTable +" WHERE healthCode in "+str(healthCodes) + " ORDER BY createdOn DESC"
+            query = "SELECT * FROM " + self.studyTable +" WHERE healthCode in "+str(healthCodes) + " ORDER BY createdOn DESC LIMIT 1000"
         else:
-            query = "SELECT * FROM " + self.studyTable + " ORDER BY createdOn DESC"
+            query = "SELECT * FROM " + self.studyTable + " ORDER BY createdOn DESC LIMIT 1000"
 
 
 
@@ -111,6 +111,14 @@ class Study:
         for file_handle_id, path in files.items():
             #file handle id is the kay and its path is the value
             fileHandleId_to_Path[int(file_handle_id)] = path
+
+        #change all blobnames to int
+        for i in range(0, len(self.observations)):
+            for blob_name in blob_names:
+                try:
+                    self.observations[i][blob_name] = int(self.observations[i][blob_name])
+                except:
+                    continue
 
 
         #For all observations loaded update with file paths of blobs we have
@@ -192,7 +200,22 @@ class Study:
 
         return status
 
+    def isfloat(self,x):
+        #############################
+        # Description:Check if string is float
 
+        # Inputs:
+        # x: any str
+        # Output:
+        # True if it is a float.
+
+        ########################################
+        # which healthCodes:
+        try:
+            float(x)
+            return True
+        except:
+            return False
     ########################################################
     ############## Write study/Table parsers here the function name format is parse_<tablename/study name>
 
@@ -215,7 +238,7 @@ class Study:
                 # blob is a list of different measurements in the data.csv
                 blob_list = []
                 #if file path is not present for blob, this blob was not downloaded and not needed
-                if str(self.observations[i][blob_name]).isnumeric():
+                if self.isfloat(str(self.observations[i][blob_name])):
                     continue
                 else:
                     try:
@@ -230,7 +253,7 @@ class Study:
                         except:
                             continue
                     except:
-                        print('Error: File name parsing issue: '+str(self.observations[i][blob_name]))
+                        print('Error: File name parsing issue '+str(self.studyName) +' observation recordId: '+str(self.observations[i]['recordId'])+' blob name: '+str(blob_name))
                         continue
 
                     #add read csv here
