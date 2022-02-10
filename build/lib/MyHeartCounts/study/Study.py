@@ -92,7 +92,7 @@ class Study:
 
 
         response = self.synapseConnection.tableQuery(query)
-        response_df = response.asDataFrame()
+        #response_df = response.asDataFrame()
 
         #download all the blobs needed files study.
         files = self.synapseConnection.downloadTableColumns(response, blob_names)
@@ -212,25 +212,29 @@ class Study:
 
         for i in range(0,len(self.observations)):
             for blob_name in blob_names:
+                # blob is a list of different measurements in the data.csv
+                blob_list = []
                 #if file path is not present for blob, this blob was not downloaded and not needed
                 if str(self.observations[i][blob_name]).isnumeric():
                     continue
                 else:
-                    #open the blob
-                    fopen = open(self.observations[i][blob_name], encoding='utf-8-sig')
-                    csvr = csv.DictReader(fopen)
-                    #blob is a list of different measurements in the data.csv
-                    blob_list = []
-
                     try:
-                        for row in csvr:
-                            #create a list of rows
-                            blob_list.append(row)
+                        #open the blob
+                        fopen = open(self.observations[i][blob_name], encoding='utf-8-sig')
+                        csvr = csv.DictReader(fopen)
+
+                        try:
+                            for row in csvr:
+                                #create a list of rows
+                                blob_list.append(row)
+                        except:
+                            continue
                     except:
-                        pass
+                        print('Error: File name parsing issue: '+str(self.observations[i][blob_name]))
+                        continue
 
                     #add read csv here
-                    self.observations[i][blob_name+str('_data')] = blob_list
+                self.observations[i][str(blob_name)+str('_data')] = blob_list
 
         #parsing complete
         return True

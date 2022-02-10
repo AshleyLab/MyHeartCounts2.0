@@ -3,6 +3,7 @@ README.md
 setup.py
 MyHeartCounts/__init__.py
 MyHeartCounts/demo.py
+MyHeartCounts/download_minsetdata.py
 MyHeartCounts/myHeartCounts.py
 MyHeartCounts.egg-info/PKG-INFO
 MyHeartCounts.egg-info/SOURCES.txt

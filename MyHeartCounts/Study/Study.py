@@ -230,7 +230,7 @@ class Study:
                         except:
                             continue
                     except:
-                        print('Error: File name parsing issue: '+str(self.observations[i][blob_name]))
+                        print('Error: File name parsing issue observation: '+str(i)+' blob name: '+str(blob_name))
                         continue
 
                     #add read csv here
