@@ -1,8 +1,8 @@
 #python libraries needed in code
-#from .user.User import User
-#from .study.Study import Study
-from user.User import User
-from study.Study import Study
+from .user.User import User
+from .study.Study import Study
+#from user.User import User
+#from study.Study import Study
 import synapseclient
 from synapseutils.sync import syncFromSynapse
 from datetime import datetime

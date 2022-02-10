@@ -84,9 +84,9 @@ class Study:
             # replace square brackets with parenthesis for SQL formatting
             healthCodes = "(%s)" % str(healthCodes).strip('[]')
             #get all data from the study table for healthCodes needed. Can further narrow down with dates here if data is unmanagable.
-            query = "SELECT * FROM " + self.studyTable +" WHERE healthCode in "+str(healthCodes) + " ORDER BY createdOn DESC LIMIT 1000"
+            query = "SELECT * FROM " + self.studyTable +" WHERE healthCode in "+str(healthCodes) + " ORDER BY createdOn DESC"
         else:
-            query = "SELECT * FROM " + self.studyTable + " ORDER BY createdOn DESC LIMIT 1000"
+            query = "SELECT * FROM " + self.studyTable + " ORDER BY createdOn DESC"
 
 
 

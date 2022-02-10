@@ -22,7 +22,6 @@ users = MHC.Studies[0].studyUsers
 # we are down to 1044 users now. Let us see how much data they have in healthkit data collector. Lets start with 10 users just to check
 # download all data
 users = sorted(list(users))
-for i in range(1043, 0, -10):
-    print('Starting retrival..')
+for i in range(1043, 0, -5):
     MHC.Studies[0].retrieve_blobs(blob_names=['data.csv'], healthCodes=users[i:i + 50], silent=False)
     print(str(1044 - i) + ' of 1044 users downloaded.')
