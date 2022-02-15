@@ -1,15 +1,16 @@
 
 #import libraries
 from MyHeartCounts import MyHeartCounts
+import datetime
 ##############################
 
 #Initilize a MyHeartCounts object
 #MHC = MyHeartCounts(user_password_file_path = 'synapseAccess.txt',synapseCachePath ='/oak/stanford/groups/euan/projects/mhc/code/ali_code/data/synapseCache')
-MHC = MyHeartCounts(user_password_file_path='synapseAccess.txt',synapseCachePath='/Users/ajaved/Three/MHC_DataBase/code/synapseCache')
+MHC = MyHeartCounts(user_password_file_path='../../synapseAccess.txt',synapseCachePath='/Users/ajaved/Three/MHC_DataBase/code/synapseCache')
 #Rev up your engine!! -- Setting up of cache and other administrative scripts
 MHC.start()
 #load a studies
-MHC.loadStudy(studyName = 'HealthKitDataCollector',studyTable = 'syn3560085')
+MHC.loadStudy(studyName = 'HealthKitDataCollector',studyTable = 'syn3560085',limit = 1000)
 MHC.loadStudy(studyName = 'mindset_adequacy',studyTable = ' syn18143711')
 MHC.loadStudy(studyName = 'AB_TestResults',studyTable = 'syn7188351')
 
@@ -21,10 +22,13 @@ users.intersection(MHC.Studies[2].studyUsers)
 #we are down to 1044 users now. Let us see how much data they have in healthkit data collector. Lets start with 10 users just to check
 #download all data
 users = sorted(list(users))
-c = 0
-for i in range(len(users), 0, -10):
-    print(str(10*c) +' of '+ str(len(users))+' downloaded.')
-    MHC.Studies[0].retrieve_blobs(blob_names=['data.csv'], healthCodes=users[i-10:i], silent=False)
-    c+=1
+#initial users are sort of testing users.
+for u in users[500:510]:
+    dt = datetime.datetime(2018, 4, 30, 18, 0).date()
+    MHC.Studies[0].retrieve_blobs(blob_names=['data.csv'], healthCodes=[u], silent=False)
+    for i in range(0, 270):
+        ints = MHC.Users[0].get_interaction(dt,awsCachePath='/Users/ajaved/Three/ali_code/AWS/mobile-analytics/mobile-analytics/')
+        dt += datetime.timedelta(days=1)
 
 
+print('complete')
