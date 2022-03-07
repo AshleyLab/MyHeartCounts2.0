@@ -23,4 +23,4 @@ users = MHC.Studies[0].studyUsers
 users = sorted(list(users))
 for i in range(len(users), 0, -1):
     MHC.Studies[0].retrieve_blobs(blob_names=['data.csv'], healthCodes=users[i-2:i], silent=False)
-    print(str(1044 - i) + ' of 1044 users downloaded.')
+    print(str(1044 - i) + ' of '+str(len(users))+ ' users downloaded.')

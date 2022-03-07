@@ -66,7 +66,7 @@ class Study:
         #############################################################################
 
 
-    def retrieve_blobs(self,blob_names,healthCodes = [], silent = True):
+    def retrieve_blobs(self,blob_names, query = '', silent = True):
         #############################
         # Description: Retrieve parse and clean blobs for a study.
 
@@ -79,14 +79,12 @@ class Study:
 
         # connect to synapse
         self.synapseConnection = self.connectToSynapse(silent=silent)
-        #only if we have healthCodes to short list
-        if len(healthCodes) > 0:
-            # replace square brackets with parenthesis for SQL formatting
-            healthCodes = "(%s)" % str(healthCodes).strip('[]')
-            #get all data from the study table for healthCodes needed. Can further narrow down with dates here if data is unmanagable.
-            query = "SELECT * FROM " + self.studyTable +" WHERE healthCode in "+str(healthCodes) + " ORDER BY createdOn DESC"
-        else:
+        #only query is not provided as input
+        if len(query) > 0:
+            #get all data from the study table.
             query = "SELECT * FROM " + self.studyTable + " ORDER BY createdOn DESC"
+    
+        
 
 
 

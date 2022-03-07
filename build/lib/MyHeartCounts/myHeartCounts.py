@@ -111,6 +111,18 @@ class MyHeartCounts:
         #connect to synapse
         self.synapseConnection = self.connectToSynapse()
         #print('Retrieving user data. This may take some time if cache is empty.')
+
+        # fill unique users with AWS clidet is
+        query = "Select * from syn5587024 ORDER BY createdOn DESC"
+        # Query synapse
+        response = self.synapseConnection.tableQuery(query)
+        # convert the response to a dataframe and load in our users object
+        response_df = response.asDataFrame()
+        # convert to dictioanry
+        healthCode_to_AWSclientId = {}
+        for index, row in response_df.iterrows():
+            healthCode_to_AWSclientId[row['healthCode']] = row['AwsClientId.clientId']
+
         
         #Data retrieval, parsing and clearning
         #There are two tables that have base data related to users, and not to MHC studies. We can add more tables here to be read.
@@ -134,6 +146,7 @@ class MyHeartCounts:
                 #parse and clean columns that require. If any value is missing set it to nan (not a number)
                 createdOn = datetime.fromtimestamp(row['createdOn'] / 1e3)
                 healthCode = row['healthCode']
+
 
                 user_dict = {}
                 user_dict['healthCode'] = healthCode
@@ -168,6 +181,11 @@ class MyHeartCounts:
                 except:
                     user_dict['height'] = float('nan')
 
+                try:
+                    user_dict['awsID'] = healthCode_to_AWSclientId[healthCode]
+                except:
+                    user_dict['awsID'] = None
+
                 #for date of birth we need to minus age from createdOn date
                 try:
                     user_dict['dob'] = createdOn- datetime.timedelta(years = float(row['NonIdentifiableDemographics.patientCurrentAge']))
@@ -185,10 +203,16 @@ class MyHeartCounts:
 
             #############################################################################
 
+
+
+
+
         #update set of users in MHC.
         self.refresh_UniqueUsers()
 
-        #logout of synapse once done.
+
+
+            #logout of synapse once done.
         status = self.synapseConnection.logout()
         
         if status != None:
